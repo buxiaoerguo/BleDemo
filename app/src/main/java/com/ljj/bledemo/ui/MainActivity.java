@@ -90,7 +90,9 @@ public class MainActivity extends AppCompatActivity {
                     bleUtil.startScan();
                     btnScan.setText("StopScan");
                     bleScanList.clear();
-                    mainAdapter.notifyDataSetChanged();
+                    if (mainAdapter!=null) {
+                        mainAdapter.notifyDataSetChanged();
+                    }
                 } else if (btnScan.getText().equals("StopScan")) {
                     bleUtil.stopScan();
                     btnScan.setText("StartScan");
