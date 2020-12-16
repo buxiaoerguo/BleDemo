@@ -71,10 +71,8 @@ public class BleUtil {
         boolean onOff = true;
         BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
         if (adapter == null || !adapter.isEnabled()) {
-
             onOff = false;
         } else if (!requestPermissions()) {
-
             onOff = true;
         }
         return onOff;
@@ -139,7 +137,6 @@ public class BleUtil {
     }
 
     public void disConnect() {
-
         if (mBleAdapter == null || mBluetoothGatt == null) {
             LogUtil.e("BluetoothAdapter not initialized.");
             return;
@@ -158,14 +155,12 @@ public class BleUtil {
             LogUtil.e("No device found at this address：" + address);
             return;
         }
-
         try {
             BluetoothDevice remoteDevice = mBleAdapter.getRemoteDevice(address);
             if (remoteDevice == null) {
                 LogUtil.e("Device not found.  Unable to connect.");
                 return;
             }
-            //第四步：连接蓝牙
             mBluetoothGatt = remoteDevice.connectGatt(mContext, false, mGattCallBack);
             LogUtil.e("connecting mac-address:" + address);
         } catch (Exception e) {
@@ -188,7 +183,6 @@ public class BleUtil {
         public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
             super.onConnectionStateChange(gatt, status, newState);
             LogUtil.e("onConnectionStateChange");
-            //102
             if (newState == 2) {
                 LogUtil.e(" Gatt success: " + gatt.getDevice().getAddress());
                     gatt.discoverServices();
@@ -204,14 +198,13 @@ public class BleUtil {
             super.onServicesDiscovered(gatt, status);
             LogUtil.e("onServicesDiscovered");
             gatt.requestMtu(158);
-            //101
         }
 
         @Override
         public void onCharacteristicRead(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) {
             super.onCharacteristicRead(gatt, characteristic, status);
             LogUtil.e("onCharacteristicRead");
-            //104
+
         }
 
         @Override
@@ -235,7 +228,6 @@ public class BleUtil {
         public void onDescriptorRead(BluetoothGatt gatt, BluetoothGattDescriptor descriptor, int status) {
             super.onDescriptorRead(gatt, descriptor, status);
             LogUtil.e("onDescriptorRead");
-            //106
         }
 
         @Override
@@ -310,6 +302,16 @@ public class BleUtil {
             return false;
         } else {
             return true;
+        }
+    }
+
+    public void readCharacteristic(String serviceUUID, String characteristicUUID) {
+        if (mBluetoothGatt != null) {
+            BluetoothGattService service =
+                    mBluetoothGatt.getService(UUID.fromString(serviceUUID));
+            BluetoothGattCharacteristic characteristic =
+                    service.getCharacteristic(UUID.fromString(characteristicUUID));
+            mBluetoothGatt.readCharacteristic(characteristic);
         }
     }
 }

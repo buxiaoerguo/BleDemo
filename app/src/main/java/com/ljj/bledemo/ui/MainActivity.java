@@ -171,6 +171,7 @@ public class MainActivity extends AppCompatActivity {
             AppExecutors.getInstance().mainThread().execute(new Runnable() {
                 @Override
                 public void run() {
+                    bleUtil.close();
                     btnDisCon.setVisibility(View.GONE);
                 }
             });
